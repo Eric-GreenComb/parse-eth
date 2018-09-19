@@ -39,5 +39,5 @@ func initConfig() {
 	MongoDB.Host = viper.GetString("mongo.host")
 	MongoDB.DB = viper.GetString("mongo.db")
 	MongoDB.Block = viper.GetString("mongo.block")
-	MongoDB.Token = viper.GetString("mongo.sinoc")
+	MongoDB.Token = viper.GetString("mongo.token")
 }

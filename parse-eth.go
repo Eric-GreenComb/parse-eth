@@ -15,6 +15,9 @@ import (
 
 func main() {
 
+	fmt.Println(config.MongoDB.Block)
+	fmt.Println(config.MongoDB.Token)
+
 	session, err := mgo.Dial(config.MongoDB.Host)
 	if err != nil {
 		panic(err)

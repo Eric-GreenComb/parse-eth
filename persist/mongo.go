@@ -38,8 +38,7 @@ func (m *Mongo) InsertBlockInfo(block interface{}) error {
 func (m *Mongo) GetSyncedBlockCount() uint64 {
 	result := common.MBlock{}
 	m.Block.Find(bson.M{}).Sort("-number").Limit(1).One(&result)
-	syncedNumber, _ := strconv.ParseUint(result.Number.String(), 10, 64)
-	return syncedNumber
+	return uint64(result.Number)
 }
 
 // InsertTokenTransfer InsertTokenTransfer
@@ -92,6 +91,12 @@ func (m *Mongo) Sync(syncedNumber, latestBlock uint64, c chan int) {
 					continue
 				}
 
+				mTransaction := _tx.ToMTransaction()
+				mTransaction.Value = _value
+
+				if err := m.InsertTokenTransfer(mTransaction); err != nil {
+					log.Fatal(err)
+				}
 				fmt.Println(_tx.BlockNumber, _tx.From, _addr, _value)
 			}
 		}

@@ -2,23 +2,24 @@ package common
 
 import (
 	"math/big"
+	"time"
 
 	"gopkg.in/mgo.v2/bson"
 )
 
 // MBlock represents a block header in Mongodbq.
 type MBlock struct {
-	Number bson.Decimal128 `bson:"number"`
-	Hash   string          `bson:"hash"`
-	Time   bson.Decimal128 `bson:"timestamp"`
+	Number    int64  `bson:"number"`
+	Hash      string `bson:"hash"`
+	Timestamp int64  `bson:"timestamp"`
 }
 
 // MTransaction represents a transaction that will serialize to the RPC representation of a transaction
 type MTransaction struct {
-	BlockNumber bson.Decimal128 `bson:"blockNumber"`
-	From        string          `bson:"from"`
-	To          string          `bson:"to"`
-	Value       bson.Decimal128 `bson:"value"`
+	BlockNumber int64  `bson:"blocknumber"`
+	From        string `bson:"from"`
+	To          string `bson:"to"`
+	Value       string `bson:"value"`
 }
 
 // Block represents a block header in the Ethereum blockchain.
@@ -72,13 +73,19 @@ func hexToDecimal(s string) bson.Decimal128 {
 	// return bigInt.Int64()
 }
 
+func hexToInt64(s string) int64 {
+	bigInt := new(big.Int)
+	bigInt.SetString(s, 0)
+	return bigInt.Int64()
+}
+
 // ToMBlock 转为为mongodb需要的bson格式
 func (r *Block) ToMBlock() *MBlock {
 	var mb = MBlock{}
 
-	mb.Number = hexToDecimal(r.Number)
+	mb.Number = hexToInt64(r.Number)
 	mb.Hash = r.Hash
-	mb.Time = hexToDecimal(r.Time)
+	mb.Timestamp = time.Now().Unix()
 
 	return &mb
 }
@@ -88,10 +95,9 @@ func (t *Transaction) ToMTransaction() *MTransaction {
 
 	var mt = MTransaction{}
 
-	mt.BlockNumber = hexToDecimal(t.BlockNumber)
+	mt.BlockNumber = hexToInt64(t.BlockNumber)
 	mt.From = t.From
 	mt.To = t.To
-	mt.Value = hexToDecimal(t.Value)
 
 	return &mt
 }
