@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"time"
 
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -92,7 +93,9 @@ func (m *Mongo) Sync(syncedNumber, latestBlock uint64, c chan int) {
 				}
 
 				mTransaction := _tx.ToMTransaction()
+				mTransaction.To = _addr
 				mTransaction.Value = _value
+				mTransaction.Timestamp = time.Now().Unix()
 
 				if err := m.InsertTokenTransfer(mTransaction); err != nil {
 					log.Fatal(err)

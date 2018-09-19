@@ -18,8 +18,10 @@ type MBlock struct {
 type MTransaction struct {
 	BlockNumber int64  `bson:"blocknumber"`
 	From        string `bson:"from"`
+	Token       string `bson:"token"`
 	To          string `bson:"to"`
 	Value       string `bson:"value"`
+	Timestamp   int64  `bson:"timestamp"`
 }
 
 // Block represents a block header in the Ethereum blockchain.
@@ -96,8 +98,8 @@ func (t *Transaction) ToMTransaction() *MTransaction {
 	var mt = MTransaction{}
 
 	mt.BlockNumber = hexToInt64(t.BlockNumber)
+	mt.Token = t.To
 	mt.From = t.From
-	mt.To = t.To
 
 	return &mt
 }
