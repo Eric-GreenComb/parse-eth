@@ -1,6 +1,7 @@
 package persist
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"strconv"
@@ -9,6 +10,8 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 
+	"github.com/Eric-GreenComb/contrib/net/http"
+	"github.com/Eric-GreenComb/parse-eth/bean"
 	"github.com/Eric-GreenComb/parse-eth/common"
 	"github.com/Eric-GreenComb/parse-eth/config"
 	"github.com/Eric-GreenComb/parse-eth/parser"
@@ -100,6 +103,17 @@ func (m *Mongo) Sync(syncedNumber, latestBlock uint64, c chan int) {
 				if err := m.InsertTokenTransfer(mTransaction); err != nil {
 					log.Fatal(err)
 				}
+
+				var _reCharge bean.ReCharge
+				_reCharge.Address = _tx.From
+				_reCharge.Nums = _value
+				_reCharge.CreateTime = time.Now().Unix()
+				_reCharge.IsAuth = "Sinoc"
+
+				_postJSON, _ := json.Marshal(_reCharge)
+
+				http.PostJSONString(config.Server.RecharegeAPI, string(_postJSON))
+
 				fmt.Println(_tx.BlockNumber, _tx.From, _addr, _value)
 			}
 		}

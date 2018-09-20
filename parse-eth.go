@@ -15,9 +15,6 @@ import (
 
 func main() {
 
-	fmt.Println(config.MongoDB.Block)
-	fmt.Println(config.MongoDB.Token)
-
 	session, err := mgo.Dial(config.MongoDB.Host)
 	if err != nil {
 		panic(err)
@@ -35,7 +32,7 @@ func main() {
 		_startNum = _mongoNum
 	}
 
-	fmt.Println(_startNum)
+	fmt.Println("start block num : ", _startNum)
 
 	sync := make(chan int, 1)
 	go mongo.Sync(_startNum, parser.GetLatestBlockNumber(), sync)
