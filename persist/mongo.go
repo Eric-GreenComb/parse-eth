@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 	"time"
 
 	"gopkg.in/mgo.v2"
@@ -83,7 +84,7 @@ func (m *Mongo) Sync(syncedNumber, latestBlock uint64, c chan int) {
 
 		for _, _tx := range block.TXs {
 
-			if _tx.To == config.Ethereum.TokenAddress {
+			if strings.ToLower(_tx.To) == config.Ethereum.TokenAddress {
 
 				_addr, _value, err := parser.ParseTokenTransfer(_tx.Input)
 				if err != nil {
@@ -91,9 +92,10 @@ func (m *Mongo) Sync(syncedNumber, latestBlock uint64, c chan int) {
 					continue
 				}
 
-				if _addr != config.Ethereum.ToAddress {
+				if strings.ToLower(_addr) != config.Ethereum.ToAddress {
 					continue
 				}
+				fmt.Println("_addr == config.Ethereum.ToAddress")
 
 				mTransaction := _tx.ToMTransaction()
 				mTransaction.To = _addr
