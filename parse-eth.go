@@ -35,7 +35,7 @@ func main() {
 	fmt.Println("start block num : ", _startNum)
 
 	sync := make(chan int, 1)
-	go mongo.Sync(_startNum, parser.GetLatestBlockNumber(), sync)
+	go mongo.Sync(_startNum, parser.GetLatestValidBlockNumber(), sync)
 
 	// 周期同步
 	for {
@@ -43,13 +43,13 @@ func main() {
 		case <-sync:
 			log.Println("syncing task is completed.")
 			time.Sleep(time.Duration(config.Server.Timer) * time.Second) // TODO: using event listen
-			mongo.Sync(mongo.GetSyncedBlockCount(), parser.GetLatestBlockNumber(), sync)
+			mongo.Sync(mongo.GetSyncedBlockCount(), parser.GetLatestValidBlockNumber(), sync)
 		}
 	}
 }
 
 func parseTx() {
-	fmt.Println(parser.GetLatestBlockNumber())
+	fmt.Println(parser.GetLatestValidBlockNumber())
 
 	block := common.Block{}
 

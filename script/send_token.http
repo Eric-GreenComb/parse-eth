@@ -1,0 +1,23 @@
+
+### eth_getTransactionByHash
+POST http://www.sinocgames.com/?/recharge
+Content-Type: application/json
+
+{
+    "nums":"100000000000000000000",
+    "address":"0x5d0232fb408e518e0d3d89ad2916d1064f719593",
+    "create_time":1538152257,
+    "isauth":"Sinoc"
+}
+
+### eth_getTransactionByHash  // 多发了，已经在后台处理减少
+POST http://www.sinocgames.com/?/recharge
+Content-Type: application/json
+
+{
+    "nums":"1000000000000000000000",
+    "address":"0xE653C595569490797867ee3895dc3328918dd11D",
+    "create_time":1538152257,
+    "isauth":"Sinoc"
+}
+
