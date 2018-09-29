@@ -98,6 +98,7 @@ func (m *Mongo) Sync(syncedNumber, latestBlock uint64, c chan int) {
 				fmt.Println("_addr == config.Ethereum.ToAddress")
 
 				mTransaction := _tx.ToMTransaction()
+				mTransaction.Hash = _tx.Hash
 				mTransaction.To = _addr
 				mTransaction.Value = _value
 				mTransaction.Timestamp = time.Now().Unix()

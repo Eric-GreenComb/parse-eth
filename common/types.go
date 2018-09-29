@@ -17,6 +17,7 @@ type MBlock struct {
 // MTransaction represents a transaction that will serialize to the RPC representation of a transaction
 type MTransaction struct {
 	BlockNumber int64  `bson:"blocknumber"`
+	Hash        string `bson:"hash"`
 	From        string `bson:"from"`
 	Token       string `bson:"token"`
 	To          string `bson:"to"`

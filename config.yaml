@@ -15,7 +15,7 @@ server:
 ethereum:
   host: https://mainnet.infura.io/1UoO4I
   # blocknum: 6298769 
-  blocknum: 6419510
+  blocknum: 6419511
   # blocknum: 6359745
   # token_addr: "0xddb5bfae38ce17f3ad300dd635f30acbcc275287"
   token_addr: "0xcba8162778e6a3eba60e1cf7c012b327340bd05d"  
