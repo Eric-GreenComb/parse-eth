@@ -47,36 +47,3 @@ func main() {
 		}
 	}
 }
-
-func parseTx() {
-	fmt.Println(parser.GetLatestValidBlockNumber())
-
-	block := common.Block{}
-
-	resp, err := parser.Call(config.Ethereum.Host, "eth_getBlockByNumber", []interface{}{config.Ethereum.BlockNum, true})
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if err := parser.MapToObject(resp.Result, &block); err != nil {
-		log.Fatalln(err)
-	}
-
-	for _, _tx := range block.TXs {
-
-		if _tx.To == config.Ethereum.TokenAddress {
-			_addr, _value, err := parser.ParseTokenTransfer(_tx.Input)
-			if err != nil {
-				fmt.Println(err.Error())
-				continue
-			}
-
-			if _addr != config.Ethereum.ToAddress {
-				continue
-			}
-
-			fmt.Println(_tx.From, _addr, _value)
-		}
-
-	}
-}

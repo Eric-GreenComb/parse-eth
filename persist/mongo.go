@@ -67,17 +67,17 @@ func (m *Mongo) Sync(syncedNumber, latestBlock uint64, c chan int) {
 		number := fmt.Sprintf("0x%s", strconv.FormatUint(uint64(i), 16))
 		resp, err := parser.Call(config.Ethereum.Host, "eth_getBlockByNumber", []interface{}{number, true})
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err.Error())
 		}
 
 		if err := parser.MapToObject(resp.Result, &block); err != nil {
-			log.Fatalln(err)
+			log.Println(err.Error())
 		}
 
 		mBlock := block.ToMBlock()
 
 		if err := m.InsertBlockInfo(mBlock); err != nil {
-			log.Fatal(err)
+			log.Println(err.Error())
 		}
 
 		log.Println("block : ", i, block.Number, len(block.TXs))
@@ -104,7 +104,7 @@ func (m *Mongo) Sync(syncedNumber, latestBlock uint64, c chan int) {
 				mTransaction.Timestamp = time.Now().Unix()
 
 				if err := m.InsertTokenTransfer(mTransaction); err != nil {
-					log.Fatal(err)
+					log.Println(err.Error())
 				}
 
 				var _reCharge bean.ReCharge
