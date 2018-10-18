@@ -80,7 +80,7 @@ func (m *Mongo) Sync(syncedNumber, latestBlock uint64, c chan int) {
 			log.Fatal(err)
 		}
 
-		fmt.Println("block : ", i, block.Number, len(block.TXs))
+		log.Println("block : ", i, block.Number, len(block.TXs))
 
 		for _, _tx := range block.TXs {
 
@@ -88,14 +88,14 @@ func (m *Mongo) Sync(syncedNumber, latestBlock uint64, c chan int) {
 
 				_addr, _value, err := parser.ParseTokenTransfer(_tx.Input)
 				if err != nil {
-					fmt.Println(err.Error())
+					log.Println(err.Error())
 					continue
 				}
 
 				if strings.ToLower(_addr) != config.Ethereum.ToAddress {
 					continue
 				}
-				fmt.Println("_addr == config.Ethereum.ToAddress")
+				log.Println("_addr == config.Ethereum.ToAddress")
 
 				mTransaction := _tx.ToMTransaction()
 				mTransaction.Hash = _tx.Hash
@@ -117,7 +117,7 @@ func (m *Mongo) Sync(syncedNumber, latestBlock uint64, c chan int) {
 
 				http.PostJSONString(config.Server.RecharegeAPI, string(_postJSON))
 
-				fmt.Println(_tx.BlockNumber, _tx.From, _addr, _value)
+				log.Println(_tx.BlockNumber, _tx.From, _addr, _value)
 			}
 		}
 	}
