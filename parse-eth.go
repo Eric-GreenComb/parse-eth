@@ -7,7 +7,6 @@ import (
 
 	mgo "gopkg.in/mgo.v2"
 
-	"github.com/Eric-GreenComb/parse-eth/common"
 	"github.com/Eric-GreenComb/parse-eth/config"
 	"github.com/Eric-GreenComb/parse-eth/parser"
 	"github.com/Eric-GreenComb/parse-eth/persist"
