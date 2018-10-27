@@ -1,6 +1,8 @@
 package config
 
 import (
+	"strings"
+
 	"github.com/spf13/viper"
 
 	"github.com/Eric-GreenComb/parse-eth/bean"
@@ -33,8 +35,8 @@ func initConfig() {
 
 	Ethereum.Host = viper.GetString("ethereum.host")
 	Ethereum.BlockNum = uint64(viper.GetInt64("ethereum.blocknum"))
-	Ethereum.TokenAddress = viper.GetString("ethereum.token_addr")
-	Ethereum.ToAddress = viper.GetString("ethereum.to_addr")
+	Ethereum.TokenAddress = strings.ToLower(viper.GetString("ethereum.token_addr"))
+	Ethereum.ToAddress = strings.ToLower(viper.GetString("ethereum.to_addr"))
 
 	MongoDB.Host = viper.GetString("mongo.host")
 	MongoDB.DB = viper.GetString("mongo.db")

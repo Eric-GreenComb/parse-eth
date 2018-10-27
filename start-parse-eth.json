@@ -1,0 +1,15 @@
+{
+    "apps": [{
+        "name": "parse-eth",
+        "cwd": "./",
+        "script": "start-parse-eth.sh",
+        "exec_interpreter": "bash",
+        "min_uptime": "60s",
+        "max_restarts": 30,
+        "exec_mode": "fork",
+        "error_file": "./tmp/start-parse-eth-err.log",
+        "out_file": "./tmp/start-parse-eth-out.log",
+        "pid_file": "./tmp/start-parse-eth_linked.pid",
+        "watch": false
+    }]
+}

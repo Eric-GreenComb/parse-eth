@@ -15,9 +15,8 @@ server:
 ethereum:
   host: https://mainnet.infura.io/1UoO4I
   # blocknum: 6538490 
-  blocknum: 6538490
+  blocknum: 6563800
   # blocknum: 6359745
-  # token_addr: "0xddb5bfae38ce17f3ad300dd635f30acbcc275287"
   token_addr: "0xcba8162778e6a3eba60e1cf7c012b327340bd05d"  
   to_addr: "47e8426dba3eddbb3cec855a2f3e5db7eaaf5109"
 
@@ -27,7 +26,7 @@ ethereum:
 #
 ###############################################################################
 mongo:
-  host: "127.0.0.1:27017"
+  host: "127.0.0.1:37022"
   db: "ethereum"
   block: "block"
   token: "sinoc"
