@@ -4,7 +4,8 @@
 #
 ###############################################################################
 server:
-  recharege_api: "http://www.sinocgames.com/?/recharge"
+  recharege_api: "http://www.sinocgames.com"
+  send_api: false
   timer: 10
 
 ###############################################################################
@@ -15,10 +16,14 @@ server:
 ethereum:
   host: https://mainnet.infura.io/1UoO4I
   # blocknum: 6538490 
-  blocknum: 6563800
+  blocknum: 6664800
   # blocknum: 6359745
-  token_addr: "0xcba8162778e6a3eba60e1cf7c012b327340bd05d"  
-  to_addr: "47e8426dba3eddbb3cec855a2f3e5db7eaaf5109"
+  # token_addr: "0xcba8162778e6a3eba60e1cf7c012b327340bd05d"  
+  # to_addr: "0x0cf0698955123303a9a36ce470552c8d10ee6198"
+  # token: "SINOC"
+  token_addr: "0x"  
+  to_addr: "0x8d7d7E21C59Ad36BBD5bf63FBfC262F8C2986b13"
+  token: "ETH"
 
 ###############################################################################
 #

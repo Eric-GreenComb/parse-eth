@@ -16,6 +16,7 @@ func main() {
 
 	session, err := mgo.Dial(config.MongoDB.Host)
 	if err != nil {
+		fmt.Println(err.Error())
 		panic(err)
 	}
 	defer session.Close()

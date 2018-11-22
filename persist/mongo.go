@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math/big"
 	"strconv"
 	"strings"
 	"time"
@@ -83,44 +84,116 @@ func (m *Mongo) Sync(syncedNumber, latestBlock uint64, c chan int) {
 		log.Println("block : ", i, block.Number, len(block.TXs))
 
 		for _, _tx := range block.TXs {
-
-			if strings.ToLower(_tx.To) == config.Ethereum.TokenAddress {
-
-				_addr, _value, err := parser.ParseTokenTransfer(_tx.Input)
-				if err != nil {
-					log.Println(err.Error())
-					continue
-				}
-
-				if strings.ToLower(_addr) != config.Ethereum.ToAddress {
-					continue
-				}
-				log.Println("_addr == config.Ethereum.ToAddress")
-
-				mTransaction := _tx.ToMTransaction()
-				mTransaction.Hash = _tx.Hash
-				mTransaction.To = _addr
-				mTransaction.Value = _value
-				mTransaction.Timestamp = time.Now().Unix()
-
-				if err := m.InsertTokenTransfer(mTransaction); err != nil {
-					log.Println(err.Error())
-				}
-
-				var _reCharge bean.ReCharge
-				_reCharge.Address = _tx.From
-				_reCharge.Nums = _value
-				_reCharge.CreateTime = time.Now().Unix()
-				_reCharge.IsAuth = "Sinoc"
-
-				_postJSON, _ := json.Marshal(_reCharge)
-
-				http.PostJSONString(config.Server.RecharegeAPI, string(_postJSON))
-
-				log.Println(_tx.BlockNumber, _tx.From, _addr, _value)
+			// if tracker eth
+			if config.Ethereum.TokenAddress == "0x" {
+				m.TrackEth(_tx)
+			} else {
+				m.TrackToken(_tx)
 			}
 		}
 	}
 
 	c <- 1
+}
+
+// TrackToken TrackToken
+func (m *Mongo) TrackToken(_tx common.Transaction) error {
+
+	if strings.ToLower(_tx.To) != config.Ethereum.TokenAddress {
+		return nil
+	}
+
+	_addr, _value, err := parser.ParseTokenTransfer(_tx.Input)
+	if err != nil {
+		log.Println(err.Error())
+		return err
+	}
+
+	if strings.ToLower(_addr) != config.Ethereum.ToAddressRemove0x {
+		return nil
+	}
+	log.Println("======== addr==ToAddressRemove0x : ", _addr)
+
+	mTransaction := _tx.ToMTransaction()
+	mTransaction.Hash = _tx.Hash
+	mTransaction.To = _addr
+	mTransaction.Value = _value
+	mTransaction.Timestamp = time.Now().Unix()
+
+	if err := m.InsertTokenTransfer(mTransaction); err != nil {
+		log.Println(err.Error())
+		return err
+	}
+
+	if !config.Server.SendAPI {
+		return nil
+	}
+
+	var _reCharge bean.ReCharge
+	_reCharge.Address = _tx.From
+	_reCharge.Nums = _value
+	_reCharge.CreateTime = time.Now().Unix()
+	_reCharge.IsAuth = config.Ethereum.Token
+
+	_postJSON, _ := json.Marshal(_reCharge)
+
+	http.PostJSONString(config.Server.RecharegeAPI, string(_postJSON))
+
+	log.Println(_tx.BlockNumber, _tx.From, _addr, _value)
+
+	return nil
+}
+
+// TrackEth TrackEth
+func (m *Mongo) TrackEth(_tx common.Transaction) error {
+
+	if strings.ToLower(_tx.To) != config.Ethereum.ToAddress {
+		return nil
+	}
+
+	log.Println("======== addr==ToAddress : ", _tx.To)
+
+	mTransaction := _tx.ToMTransaction()
+	mTransaction.Hash = _tx.Hash
+	mTransaction.To = _tx.To
+
+	_value := new(big.Int)
+	_value, _ = _value.SetString(Remove0x(_tx.Value), 16)
+
+	mTransaction.Value = _value.String()
+	mTransaction.Timestamp = time.Now().Unix()
+
+	if err := m.InsertTokenTransfer(mTransaction); err != nil {
+		log.Println(err.Error())
+		return err
+	}
+
+	if !config.Server.SendAPI {
+		return nil
+	}
+
+	var _reCharge bean.ReCharge
+	_reCharge.Address = _tx.From
+	_reCharge.Nums = mTransaction.Value
+	_reCharge.CreateTime = time.Now().Unix()
+	_reCharge.IsAuth = config.Ethereum.Token
+
+	_postJSON, _ := json.Marshal(_reCharge)
+
+	http.PostJSONString(config.Server.RecharegeAPI, string(_postJSON))
+
+	log.Println(_tx.BlockNumber, _tx.From, _tx.To, _value.String())
+
+	return nil
+}
+
+// Remove0x Remove0x
+func Remove0x(s string) string {
+	var _ret string
+	if len(s) > 1 {
+		if s[0:2] == "0x" || s[0:2] == "0X" {
+			_ret = s[2:]
+		}
+	}
+	return _ret
 }
