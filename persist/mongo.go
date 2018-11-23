@@ -1,6 +1,7 @@
 package persist
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -162,6 +163,10 @@ func (m *Mongo) TrackEth(_tx common.Transaction) error {
 
 	mTransaction.Value = _value.String()
 	mTransaction.Timestamp = time.Now().Unix()
+	_input, _ := hex.DecodeString(Remove0x(_tx.Input))
+	mTransaction.Input = string(_input)
+
+	fmt.Println(mTransaction)
 
 	if err := m.InsertTokenTransfer(mTransaction); err != nil {
 		log.Println(err.Error())

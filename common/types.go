@@ -16,13 +16,14 @@ type MBlock struct {
 
 // MTransaction represents a transaction that will serialize to the RPC representation of a transaction
 type MTransaction struct {
-	BlockNumber int64  `bson:"blocknumber"`
-	Hash        string `bson:"hash"`
-	From        string `bson:"from"`
-	Token       string `bson:"token"`
-	To          string `bson:"to"`
-	Value       string `bson:"value"`
-	Timestamp   int64  `bson:"timestamp"`
+	BlockNumber int64  `bson:"blocknumber" json:"blocknumber"`
+	Hash        string `bson:"hash" json:"hash"`
+	From        string `bson:"from" json:"from"`
+	Token       string `bson:"token" json:"token"`
+	To          string `bson:"to" json:"to"`
+	Value       string `bson:"value" json:"value"`
+	Timestamp   int64  `bson:"timestamp" json:"timestamp"`
+	Input       string `bson:"input" json:"input"`
 }
 
 // Block represents a block header in the Ethereum blockchain.
@@ -47,6 +48,13 @@ type Block struct {
 	TXs             []Transaction `json:"transactions"`
 	TxHash          string        `json:"transactionsRoot"`
 	Uncles          []string      `json:"uncles"`
+}
+
+// BlockNumbers BlockNumbers
+type BlockNumbers struct {
+	JSONRPC string `json:"jsonrpc"`
+	Result  string `json:"result"`
+	ID      int    `json:"id"`
 }
 
 // Transaction represents a transaction that will serialize to the RPC representation of a transaction

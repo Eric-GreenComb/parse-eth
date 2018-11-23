@@ -18,7 +18,7 @@ func Call(host, method string, params interface{}) (*JSON2Response, error) {
 	j.Params = params
 	j.ID = 1
 
-	postGet := "POST"
+	_method := "POST"
 
 	address := host
 
@@ -27,7 +27,8 @@ func Call(host, method string, params interface{}) (*JSON2Response, error) {
 		return nil, err
 	}
 
-	req, err := http.NewRequest(postGet, address, strings.NewReader(data))
+	req, err := http.NewRequest(_method, address, strings.NewReader(data))
+	req.Header.Set("Content-type", "application/json")
 	if err != nil {
 		return nil, err
 	}
